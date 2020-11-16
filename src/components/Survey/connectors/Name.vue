@@ -15,7 +15,7 @@
     },
     methods: {
       submit () {
-        this.$router.push('/goals')
+        this.$router.push({ name: 'goals', params: {name: this.name }})
       }
     }
   }

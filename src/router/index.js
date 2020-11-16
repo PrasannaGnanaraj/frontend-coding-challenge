@@ -35,6 +35,7 @@ const router = new Router({
           name: 'goals',
           path: 'goals',
           component: Survey.connectors.Goals,
+          props: true,
           meta: {
             layout: MinimalLayout,
             authenticated: false
@@ -70,7 +71,7 @@ const router = new Router({
       ]
     }
   ],
-  scrollBehavior (to, from) {
+  scrollBehavior(to, from) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve({ x: 0, y: 0 })

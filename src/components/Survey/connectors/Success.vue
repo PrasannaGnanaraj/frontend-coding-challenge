@@ -1,7 +1,7 @@
 <script>
 import SuccessImage from '@/assets/images/thrivaling.png'
 import ThvButton from '@/components/Shared/Button'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'Success',
   components: {
@@ -19,7 +19,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({ resetSurvey: 'survey/resetSurveyStep' }),
     startOver () {
+      this.resetSurvey()
       this.$router.push('/name')
     }
   }

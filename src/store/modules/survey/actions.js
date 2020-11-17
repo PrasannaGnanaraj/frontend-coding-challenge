@@ -38,7 +38,7 @@ export default {
   decrementSurveyStep ({ commit, state }) {
     commit('updateSurveyStep', state.currentSurveyStep - 1)
   },
-  setSurveyStep ({ commit }) {
+  resetSurveyStep ({ commit }) {
     commit('updateSurveyStep', 0)
   }
 }

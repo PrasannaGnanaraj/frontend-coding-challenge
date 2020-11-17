@@ -1,49 +1,68 @@
 <script>
-  import CheckButton from '@/components/Survey/components/CheckButton'
-  import ThvButton from '@/components/Shared/Button'
+import { mapActions, mapGetters } from 'vuex'
+import CheckButton from '@/components/Survey/components/CheckButton'
+import ThvButton from '@/components/Shared/Button'
 
-  export default {
-    name: 'Diet',
-    components: {
-      ThvButton,
-      CheckButton
-    },
-    data () {
-      return {
-        diets: {
-          no: {
-            name: 'No'
-          },
-          coeliac: {
-            name: 'Coeliac'
-          },
-          lowCarbHighFat: {
-            name: 'Low-carb, high-fat'
-          },
-          paleo: {
-            name: 'Paleo'
-          },
-          pescatarian: {
-            name: 'Pescatarian'
-          },
-          plantBased: {
-            name: 'Plant-based'
-          },
-          other: {
-            name: 'Other'
-          }
+export default {
+  name: 'Diet',
+  components: {
+    ThvButton,
+    CheckButton
+  },
+  computed: {
+    ...mapGetters({ selectedDiet: 'survey/getDiet' })
+  },
+  data () {
+    return {
+      diets: {
+        no: {
+          name: 'No'
+        },
+        coeliac: {
+          name: 'Coeliac'
+        },
+        lowCarbHighFat: {
+          name: 'Low-carb, high-fat'
+        },
+        paleo: {
+          name: 'Paleo'
+        },
+        pescatarian: {
+          name: 'Pescatarian'
+        },
+        plantBased: {
+          name: 'Plant-based'
+        },
+        other: {
+          name: 'Other'
         }
       }
+    }
+  },
+  methods: {
+    ...mapActions({
+      setDiet: 'survey/setDiet',
+      clearDiet: 'survey/clearDiet',
+      incrementSurveyStep: 'survey/incrementSurveyStep',
+      decrementSurveyStep: 'survey/decrementSurveyStep'
+    }),
+    submit () {
+      this.incrementSurveyStep()
+      this.$router.push('/dob')
     },
-    methods: {
-      submit () {
-        this.$router.push('/dob')
-      },
-      back () {
-        this.$router.push('/goals')
-      }
+    back () {
+      this.decrementSurveyStep()
+      this.$router.push('/goals')
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (to.name === 'dob') {
+      this.selectedDiet ? next() : alert('Please select a diet')
+    } else {
+      next()
     }
   }
+}
 </script>
 
 <template>
@@ -52,7 +71,14 @@
       <div class="survey-questions__diet align-center">
         <h1>Do you follow a particular diet?</h1>
         <div class="spacer sp__top--sm"></div>
-        <check-button v-for="(diet, key) in diets" :key="key" :text="diet.name"></check-button>
+        <check-button
+          v-for="({ name }, key) in diets"
+          :key="key"
+          :text="name"
+          :selected="name === selectedDiet"
+          v-on:check="setDiet"
+          v-on:uncheck="clearDiet"
+        ></check-button>
         <div class="grid-x button-container">
           <div class="cell auto">
             <div class="back-button-container">
@@ -60,7 +86,9 @@
             </div>
           </div>
           <div class="cell auto align-right">
-            <thv-button element="button" size="large" @click="submit">Next</thv-button>
+            <thv-button element="button" size="large" @click="submit"
+              >Next</thv-button
+            >
           </div>
         </div>
       </div>
